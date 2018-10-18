@@ -43,6 +43,11 @@ class PoolProperties implements PoolConfigInterface
     protected $maxWait = 20;
 
     /**
+     * @var \SplQueue
+     */
+    protected $waitStack;
+
+    /**
      * Maximum waiting time
      *
      * @var int
@@ -108,6 +113,14 @@ class PoolProperties implements PoolConfigInterface
     public function getMaxWait(): int
     {
         return $this->maxWait;
+    }
+
+    public function getWaitStack(): \SplQueue
+    {
+        if ($this->waitStack === null) {
+            $this->waitStack = new \SplQueue();
+        }
+        return $this->waitStack;
     }
 
     /**

@@ -21,7 +21,7 @@ class BootPool implements BootInterface
     public function handle(): void
     {
         $server = App::getServer();
-        $server->pool = [];
+        $server->pools = [];
     }
 
 }

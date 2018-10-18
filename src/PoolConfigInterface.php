@@ -32,6 +32,11 @@ interface PoolConfigInterface extends Arrayable
     public function getMaxWait(): int;
 
     /**
+     * @return \SplQueue
+     */
+    public function getWaitStack(): \SplQueue;
+
+    /**
      * @return float
      */
     public function getTimeout(): float;

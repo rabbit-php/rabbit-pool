@@ -8,8 +8,8 @@
 
 namespace rabbit\pool;
 
-use rabbit\App;
 use rabbit\core\Exception;
+use rabbit\helper\CoroHelper;
 use Swoole\Coroutine\Channel;
 
 /**
@@ -104,6 +104,18 @@ abstract class ConnectionPool implements PoolInterface
         return current($serviceList);
     }
 
+    protected function getServiceList()
+    {
+        $name = $this->poolConfig->getName();
+        $uri = $this->poolConfig->getUri();
+        if (empty($uri)) {
+            $error = sprintf('Service does not configure uri name=%s', $name);
+            throw new \InvalidArgumentException($error);
+        }
+
+        return $uri;
+    }
+
     /**
      * @return PoolConfigInterface
      */
@@ -129,6 +141,10 @@ abstract class ConnectionPool implements PoolInterface
     {
         if ($this->queue->count() < $this->poolConfig->getMaxActive()) {
             $this->queue->push($connection);
+            if ($this->poolConfig->getWaitStack()->count() > 0) {
+                $id = $this->poolConfig->getWaitStack()->shift();
+                \Swoole\Coroutine::resume($id);
+            }
         }
     }
 
@@ -162,7 +178,16 @@ abstract class ConnectionPool implements PoolInterface
         }
 
         if ($this->currentCount >= $this->poolConfig->getMaxActive()) {
-            throw new Exception('Connection pool queue is full');
+            $this->poolConfig->getWaitStack()->push(CoroHelper::getId());
+            if ($this->poolConfig->getMaxWait() > 0 && $this->poolConfig->getWaitStack()->count() > $this->poolConfig->getMaxWait()) {
+                $this->poolConfig->getWaitStack()->shift();
+                throw new Exception('Connection pool queue is full');
+            }
+            if (\Swoole\Coroutine::suspend($this->poolConfig->getName()) == false) {
+                $this->poolConfig->getWaitStack()->shift();
+                throw new Exception('Reach max connections! Can not pending fetch!');
+            }
+            return $this->getEffectiveConnection($this->queue->count(), false);
         }
 
         $connect = $this->createConnection();

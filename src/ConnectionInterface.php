@@ -47,9 +47,9 @@ interface ConnectionInterface
     public function getConnectionId(): string;
 
     /**
-     * @return \Swoft\Pool\PoolInterface
+     * @return PoolInterface
      */
-    public function getPool(): \Swoft\Pool\PoolInterface;
+    public function getPool(): PoolInterface;
 
     /**
      * @return bool
