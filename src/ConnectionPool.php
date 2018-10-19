@@ -178,13 +178,12 @@ abstract class ConnectionPool implements PoolInterface
         }
 
         if ($this->currentCount >= $this->poolConfig->getMaxActive()) {
-            $this->poolConfig->getWaitStack()->push(CoroHelper::getId());
             if ($this->poolConfig->getMaxWait() > 0 && $this->poolConfig->getWaitStack()->count() > $this->poolConfig->getMaxWait()) {
-                $this->poolConfig->getWaitStack()->shift();
                 throw new Exception('Connection pool queue is full');
             }
+            $this->poolConfig->getWaitStack()->push(CoroHelper::getId());
             if (\Swoole\Coroutine::suspend($this->poolConfig->getName()) == false) {
-                $this->poolConfig->getWaitStack()->shift();
+                $this->poolConfig->getWaitStack()->pop();
                 throw new Exception('Reach max connections! Can not pending fetch!');
             }
             return $this->getEffectiveConnection($this->queue->count(), false);
