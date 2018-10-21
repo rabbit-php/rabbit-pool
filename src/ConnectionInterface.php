@@ -24,7 +24,7 @@ interface ConnectionInterface
     /**
      * Reconnect
      */
-    public function reconnect();
+    public function reconnect(): void;
 
     /**
      * @return bool

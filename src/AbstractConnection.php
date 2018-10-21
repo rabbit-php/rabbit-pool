@@ -7,6 +7,7 @@
  */
 
 namespace rabbit\pool;
+use rabbit\exception\NotSupportedException;
 
 /**
  * Class AbstractConnection
@@ -126,5 +127,10 @@ abstract class AbstractConnection implements ConnectionInterface
         if ($this->isAutoRelease() || $release) {
             $this->pool->release($this);
         }
+    }
+
+    public function setDefer($defer = true): void
+    {
+        throw new NotSupportedException('can not call ' . __METHOD__);
     }
 }
