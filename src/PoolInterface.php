@@ -47,4 +47,14 @@ interface PoolInterface
      * @return int
      */
     public function getTimeout(): int;
+
+    /**
+     * @return \Swoole\Coroutine\Channel
+     */
+    public function getChannelPool(): ?\Swoole\Coroutine\Channel;
+
+    /**
+     * @return null|\SplQueue
+     */
+    public function getQueuePool(): ?\SplQueue;
 }

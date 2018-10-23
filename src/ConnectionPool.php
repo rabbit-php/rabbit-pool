@@ -59,6 +59,17 @@ abstract class ConnectionPool implements PoolInterface
         } else {
             $this->queue = new \SplQueue();
         }
+        PoolManager::setPool($this);
+    }
+
+    public function getChannelPool(): ?\Swoole\Coroutine\Channel
+    {
+        return $this->channel;
+    }
+
+    public function getQueuePool(): ?\SplQueue
+    {
+        return $this->queue;
     }
 
     /**

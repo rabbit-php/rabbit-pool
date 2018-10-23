@@ -129,6 +129,10 @@ abstract class AbstractConnection implements ConnectionInterface
         }
     }
 
+    /**
+     * @param bool $defer
+     * @throws NotSupportedException
+     */
     public function setDefer($defer = true): void
     {
         throw new NotSupportedException('can not call ' . __METHOD__);
