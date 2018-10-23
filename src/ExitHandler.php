@@ -9,13 +9,13 @@
 namespace rabbit\pool;
 
 
-use rabbit\server\WorkExitInterface;
+use rabbit\server\WorkerHandlerInterface;
 
 /**
  * Class ExitHandler
  * @package rabbit\pool
  */
-class ExitHandler implements WorkExitInterface
+class ExitHandler implements WorkerHandlerInterface
 {
     public function handle(int $worker_id): void
     {
