@@ -79,7 +79,7 @@ interface ConnectionInterface
     /**
      * @param bool $defer
      */
-    public function setDefer($defer = true): void;
+    public function setDefer($defer = true): bool;
 
     /**
      * @return void
