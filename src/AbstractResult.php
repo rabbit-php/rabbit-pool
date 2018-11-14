@@ -10,6 +10,7 @@ namespace rabbit\pool;
 
 
 use rabbit\contract\ResultInterface;
+use rabbit\parser\ParserInterface;
 
 /**
  * Class AbstractResult
@@ -28,14 +29,21 @@ abstract class AbstractResult implements ResultInterface
     protected $result;
 
     /**
+     * @var ParserInterface
+     */
+    protected $parser;
+
+    /**
      * AbstractResult constructor.
      * @param ConnectionInterface $connection
      * @param $result
+     * @param null $parser
      */
-    public function __construct(ConnectionInterface $connection, $result)
+    public function __construct(ConnectionInterface $connection, $result, $parser = null)
     {
         $this->result = $result;
         $this->connection = $connection;
+        $this->parser = $parser;
     }
 
     /**
