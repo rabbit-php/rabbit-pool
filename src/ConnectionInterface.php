@@ -74,7 +74,7 @@ interface ConnectionInterface
     /**
      * @return mixed
      */
-    public function receive(float $timeout = null);
+    public function receive(float $timeout = -1);
 
     /**
      * @param bool $defer

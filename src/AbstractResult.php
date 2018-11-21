@@ -51,7 +51,7 @@ abstract class AbstractResult implements ResultInterface
      * @param bool $release
      * @return mixed
      */
-    protected function recv(bool $defer = false, float $timeout = null, bool $release = true)
+    protected function recv(bool $defer = false, float $timeout = -1, bool $release = true)
     {
         if ($this->connection instanceof ConnectionInterface) {
             $result = $this->connection->receive($timeout);
