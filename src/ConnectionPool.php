@@ -94,8 +94,6 @@ abstract class ConnectionPool implements PoolInterface
      */
     public function release(ConnectionInterface $connection)
     {
-        $connectionId = $connection->getConnectionId();
-        $connection->updateLastTime();
         $connection->setRecv(true);
         $connection->setAutoRelease(true);
 
