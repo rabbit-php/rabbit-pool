@@ -89,121 +89,6 @@ abstract class ConnectionPool implements PoolInterface
         return $connection;
     }
 
-    /**
-     * @param ConnectionInterface $connection
-     */
-    public function release(ConnectionInterface $connection)
-    {
-        $connection->setRecv(true);
-        $connection->setAutoRelease(true);
-
-        if ($this->useChannel) {
-            $this->releaseToChannel($connection);
-        } else {
-            $this->releaseToQueue($connection);
-        }
-    }
-
-    /**
-     * @return string
-     */
-    public function getConnectionAddress(): string
-    {
-        $serviceList = $this->getServiceList();
-        return current($serviceList);
-    }
-
-    protected function getServiceList()
-    {
-        $name = $this->poolConfig->getName();
-        $uri = $this->poolConfig->getUri();
-        if (empty($uri)) {
-            $error = sprintf('Service does not configure uri name=%s', $name);
-            throw new \InvalidArgumentException($error);
-        }
-
-        return $uri;
-    }
-
-    /**
-     * @return PoolConfigInterface
-     */
-    public function getPoolConfig(): PoolConfigInterface
-    {
-        return $this->poolConfig;
-    }
-
-    /**
-     * @return int
-     */
-    public function getTimeout(): int
-    {
-        return $this->poolConfig->getTimeout();
-    }
-
-    /**
-     * Release to queue
-     *
-     * @param $connection
-     */
-    private function releaseToQueue(ConnectionInterface $connection)
-    {
-        if ($this->queue->count() < $this->poolConfig->getMaxActive()) {
-            $this->queue->push($connection);
-            if ($this->poolConfig->getWaitStack()->count() > 0) {
-                $id = $this->poolConfig->getWaitStack()->shift();
-                \Swoole\Coroutine::resume($id);
-            }
-        }
-    }
-
-    /**
-     * Release to channel
-     *
-     * @param $connection
-     */
-    private function releaseToChannel(ConnectionInterface $connection)
-    {
-        $stats = $this->channel->stats();
-        $maxActive = $this->poolConfig->getMaxActive();
-        if ($stats['queue_num'] < $maxActive) {
-            $this->channel->push($connection);
-        }
-    }
-
-    /**
-     * Get connection by queue
-     *
-     * @return ConnectionInterface
-     * @throws ConnectionException
-     */
-    private function getConnectionByQueue(): ConnectionInterface
-    {
-        if ($this->queue == null) {
-            $this->queue = new \SplQueue();
-        }
-        if (!$this->queue->isEmpty()) {
-            return $this->getEffectiveConnection($this->queue->count(), false);
-        }
-
-        if ($this->currentCount >= $this->poolConfig->getMaxActive()) {
-            if ($this->poolConfig->getMaxWait() > 0 && $this->poolConfig->getWaitStack()->count() > $this->poolConfig->getMaxWait()) {
-                throw new Exception('Connection pool queue is full');
-            }
-            $this->poolConfig->getWaitStack()->push(CoroHelper::getId());
-            if (\Swoole\Coroutine::suspend($this->poolConfig->getName()) == false) {
-                $this->poolConfig->getWaitStack()->pop();
-                throw new Exception('Reach max connections! Can not pending fetch!');
-            }
-            return $this->getEffectiveConnection($this->queue->count(), false);
-        }
-
-        $connect = $this->createConnection();
-        $this->currentCount++;
-
-        return $connect;
-    }
-
     /***
      * Get connection by channel
      *
@@ -303,5 +188,120 @@ abstract class ConnectionPool implements PoolInterface
         }
 
         return $this->queue->shift();
+    }
+
+    /**
+     * Get connection by queue
+     *
+     * @return ConnectionInterface
+     * @throws ConnectionException
+     */
+    private function getConnectionByQueue(): ConnectionInterface
+    {
+        if ($this->queue == null) {
+            $this->queue = new \SplQueue();
+        }
+        if (!$this->queue->isEmpty()) {
+            return $this->getEffectiveConnection($this->queue->count(), false);
+        }
+
+        if ($this->currentCount >= $this->poolConfig->getMaxActive()) {
+            if ($this->poolConfig->getMaxWait() > 0 && $this->poolConfig->getWaitStack()->count() > $this->poolConfig->getMaxWait()) {
+                throw new Exception('Connection pool queue is full');
+            }
+            $this->poolConfig->getWaitStack()->push(CoroHelper::getId());
+            if (\Swoole\Coroutine::suspend($this->poolConfig->getName()) == false) {
+                $this->poolConfig->getWaitStack()->pop();
+                throw new Exception('Reach max connections! Can not pending fetch!');
+            }
+            return $this->getEffectiveConnection($this->queue->count(), false);
+        }
+
+        $connect = $this->createConnection();
+        $this->currentCount++;
+
+        return $connect;
+    }
+
+    /**
+     * @param ConnectionInterface $connection
+     */
+    public function release(ConnectionInterface $connection)
+    {
+        $connection->setRecv(true);
+        $connection->setAutoRelease(true);
+
+        if ($this->useChannel) {
+            $this->releaseToChannel($connection);
+        } else {
+            $this->releaseToQueue($connection);
+        }
+    }
+
+    /**
+     * Release to channel
+     *
+     * @param $connection
+     */
+    private function releaseToChannel(ConnectionInterface $connection)
+    {
+        $stats = $this->channel->stats();
+        $maxActive = $this->poolConfig->getMaxActive();
+        if ($stats['queue_num'] < $maxActive) {
+            $this->channel->push($connection);
+        }
+    }
+
+    /**
+     * Release to queue
+     *
+     * @param $connection
+     */
+    private function releaseToQueue(ConnectionInterface $connection)
+    {
+        if ($this->queue->count() < $this->poolConfig->getMaxActive()) {
+            $this->queue->push($connection);
+            if ($this->poolConfig->getWaitStack()->count() > 0) {
+                $id = $this->poolConfig->getWaitStack()->shift();
+                \Swoole\Coroutine::resume($id);
+            }
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getConnectionAddress(): string
+    {
+        $serviceList = $this->getServiceList();
+        return current($serviceList);
+    }
+
+    protected function getServiceList()
+    {
+        $name = $this->poolConfig->getName();
+        $uri = $this->poolConfig->getUri();
+        if (empty($uri)) {
+            $error = sprintf('Service does not configure uri name=%s', $name);
+            throw new \InvalidArgumentException($error);
+        }
+
+        return $uri;
+    }
+
+    /**
+     * @return PoolConfigInterface
+     */
+    public function getPoolConfig(): PoolConfigInterface
+    {
+        return $this->poolConfig;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTimeout(): int
+    {
+        return $this->poolConfig->getTimeout();
     }
 }

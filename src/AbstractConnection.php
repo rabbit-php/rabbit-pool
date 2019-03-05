@@ -7,6 +7,7 @@
  */
 
 namespace rabbit\pool;
+
 use rabbit\exception\NotSupportedException;
 
 /**
@@ -90,25 +91,9 @@ abstract class AbstractConnection implements ConnectionInterface
     /**
      * @return bool
      */
-    public function isAutoRelease(): bool
-    {
-        return $this->autoRelease;
-    }
-
-    /**
-     * @return bool
-     */
     public function isRecv(): bool
     {
         return $this->recv;
-    }
-
-    /**
-     * @param bool $autoRelease
-     */
-    public function setAutoRelease(bool $autoRelease): void
-    {
-        $this->autoRelease = $autoRelease;
     }
 
     /**
@@ -127,6 +112,22 @@ abstract class AbstractConnection implements ConnectionInterface
         if ($this->isAutoRelease() || $release) {
             $this->pool->release($this);
         }
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAutoRelease(): bool
+    {
+        return $this->autoRelease;
+    }
+
+    /**
+     * @param bool $autoRelease
+     */
+    public function setAutoRelease(bool $autoRelease): void
+    {
+        $this->autoRelease = $autoRelease;
     }
 
     /**
