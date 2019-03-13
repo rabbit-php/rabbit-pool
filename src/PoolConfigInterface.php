@@ -60,4 +60,9 @@ interface PoolConfigInterface extends Arrayable
      * @return int
      */
     public function getMaxIdleTime(): int;
+
+    /**
+     * @return int
+     */
+    public function getMaxReonnect():int;
 }

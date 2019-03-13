@@ -80,6 +80,10 @@ class PoolProperties implements PoolConfigInterface
      * @var array
      */
     protected $uri = [];
+    /**
+     * @var int
+     */
+    protected $maxReconnect = -1;
 
     /**
      * Initialize
@@ -161,6 +165,11 @@ class PoolProperties implements PoolConfigInterface
     public function getMaxIdleTime(): int
     {
         return $this->maxIdleTime;
+    }
+
+    public function getMaxReonnect(): int
+    {
+        return $this->maxReconnect;
     }
 
     /**
