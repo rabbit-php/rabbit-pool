@@ -8,11 +8,13 @@
 
 namespace rabbit\pool;
 
+use rabbit\core\BaseObject;
+
 /**
  * Class PoolProperties
  * @package rabbit\pool
  */
-class PoolProperties implements PoolConfigInterface
+class PoolProperties extends BaseObject implements PoolConfigInterface
 {
     /**
      * Pool name

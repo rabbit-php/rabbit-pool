@@ -8,6 +8,7 @@
 
 namespace rabbit\pool;
 
+use rabbit\core\BaseObject;
 use rabbit\core\Exception;
 use rabbit\helper\CoroHelper;
 use Swoole\Coroutine\Channel;
@@ -16,7 +17,7 @@ use Swoole\Coroutine\Channel;
  * Class ConnectionPool
  * @package rabbit\pool
  */
-abstract class ConnectionPool implements PoolInterface
+abstract class ConnectionPool extends BaseObject implements PoolInterface
 {
 
     /**
