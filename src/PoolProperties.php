@@ -95,6 +95,7 @@ class PoolProperties extends BaseObject implements PoolConfigInterface
         if (empty($this->name)) {
             $this->name = uniqid();
         }
+        $this->waitStack = new \SplQueue();
     }
 
     /**
@@ -123,9 +124,6 @@ class PoolProperties extends BaseObject implements PoolConfigInterface
 
     public function getWaitStack(): \SplQueue
     {
-        if ($this->waitStack === null) {
-            $this->waitStack = new \SplQueue();
-        }
         return $this->waitStack;
     }
 
