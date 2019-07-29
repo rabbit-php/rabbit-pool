@@ -60,7 +60,6 @@ abstract class ConnectionPool extends BaseObject implements PoolInterface
         } else {
             $this->queue = new \SplQueue();
         }
-        PoolManager::setPool($this);
     }
 
     public function getChannelPool(): ?\Swoole\Coroutine\Channel
@@ -117,7 +116,8 @@ abstract class ConnectionPool extends BaseObject implements PoolInterface
 
         $maxWait = $this->poolConfig->getMaxWait();
         if ($maxWait != 0 && $stats['consumer_num'] >= $maxWait) {
-            throw new Exception(sprintf('Connection pool waiting queue is full, maxActive=%d,maxWait=%d,currentCount=%d', $maxActive, $maxWait, $this->currentCount));
+            throw new Exception(sprintf('Connection pool waiting queue is full, maxActive=%d,maxWait=%d,currentCount=%d',
+                $maxActive, $maxWait, $this->currentCount));
         }
 
         $maxWaitTime = $this->poolConfig->getMaxWaitTime();
@@ -275,7 +275,7 @@ abstract class ConnectionPool extends BaseObject implements PoolInterface
     public function getConnectionAddress(): string
     {
         $serviceList = $this->getServiceList();
-        return current($serviceList);
+        return $serviceList[array_rand($serviceList)];
     }
 
     protected function getServiceList()
