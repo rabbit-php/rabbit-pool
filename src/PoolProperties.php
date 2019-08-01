@@ -140,6 +140,9 @@ class PoolProperties extends BaseObject implements PoolConfigInterface
      */
     public function getUri(): array
     {
+        if (is_string($this->uri)) {
+            $this->uri = explode(',', $this->uri);
+        }
         return $this->uri;
     }
 
