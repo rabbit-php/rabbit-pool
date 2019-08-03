@@ -42,10 +42,6 @@ abstract class AbstractConnection implements ConnectionInterface
      * @var bool
      */
     protected $recv = true;
-    /**
-     * @var int
-     */
-    protected $reconnectCount = 0;
 
     /**
      * AbstractConnection constructor.
