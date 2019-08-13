@@ -22,6 +22,10 @@ interface PoolConfigInterface extends Arrayable
     public function getName(): string;
 
     /**
+     * @return array
+     */
+    public function getOptions(): array;
+    /**
      * @return int
      */
     public function getMaxActive(): int;

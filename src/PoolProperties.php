@@ -69,7 +69,8 @@ class PoolProperties extends BaseObject implements PoolConfigInterface
      * @var float
      */
     protected $timeout = 3;
-
+    /** @var array */
+    protected $options = [];
     /**
      * Connection addresses
      * <pre>
@@ -104,6 +105,14 @@ class PoolProperties extends BaseObject implements PoolConfigInterface
     public function getName(): string
     {
         return $this->name;
+    }
+
+    /**
+     * @return array
+     */
+    public function getOptions(): array
+    {
+        return $this->options;
     }
 
     /**
