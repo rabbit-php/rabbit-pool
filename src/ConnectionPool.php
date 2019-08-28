@@ -211,7 +211,7 @@ abstract class ConnectionPool extends BaseObject implements PoolInterface
                 throw new Exception('Connection pool queue is full');
             }
             $this->poolConfig->getWaitStack()->push(CoroHelper::getId());
-            if (\Swoole\Coroutine::suspend($this->poolConfig->getName()) == false) {
+            if (\Swoole\Coroutine::suspend() == false) {
                 $this->poolConfig->getWaitStack()->pop();
                 throw new Exception('Reach max connections! Can not pending fetch!');
             }
