@@ -24,7 +24,11 @@ class PoolManager
      */
     public static function setPool(ConnectionPool $pool): void
     {
-        self::$pools[$pool->getPoolConfig()->getName()] = $pool;
+        $name = $pool->getPoolConfig()->getName();
+        if (isset(self::$pools[$name])) {
+            throw new \RuntimeException("The $name already set in PoolManager");
+        }
+        self::$pools[$name] = $pool;
     }
 
     /**

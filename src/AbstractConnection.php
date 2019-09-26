@@ -17,9 +17,9 @@ use rabbit\exception\NotSupportedException;
 abstract class AbstractConnection implements ConnectionInterface
 {
     /**
-     * @var PoolInterface
+     * @var string
      */
-    protected $pool;
+    protected $poolKey;
 
     /**
      * @var int
@@ -48,11 +48,11 @@ abstract class AbstractConnection implements ConnectionInterface
      *
      * @param PoolInterface $connectPool
      */
-    public function __construct(PoolInterface $connectPool)
+    public function __construct(string $poolKey)
     {
         $this->lastTime = time();
         $this->connectionId = uniqid();
-        $this->pool = $connectPool;
+        $this->poolKey = $poolKey;
         $this->createConnection();
     }
 
@@ -110,7 +110,7 @@ abstract class AbstractConnection implements ConnectionInterface
     public function release($release = false): void
     {
         if ($this->isAutoRelease() || $release) {
-            $this->pool->release($this);
+            PoolManager::getPool($this->poolKey)->release($this);
         }
     }
 

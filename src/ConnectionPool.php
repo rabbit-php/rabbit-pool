@@ -60,6 +60,7 @@ abstract class ConnectionPool extends BaseObject implements PoolInterface
         } else {
             $this->queue = new \SplQueue();
         }
+        PoolManager::setPool($this);
     }
 
     public function getChannelPool(): ?\Swoole\Coroutine\Channel
