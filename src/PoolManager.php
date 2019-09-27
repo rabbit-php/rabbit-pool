@@ -20,9 +20,9 @@ class PoolManager
     private static $pools = [];
 
     /**
-     * @param ConnectionPool $pool
+     * @param PoolInterface $pool
      */
-    public static function setPool(ConnectionPool $pool): void
+    public static function setPool(PoolInterface $pool): void
     {
         $name = $pool->getPoolConfig()->getName();
         if (isset(self::$pools[$name])) {
@@ -33,15 +33,15 @@ class PoolManager
 
     /**
      * @param string $name
-     * @return null|ConnectionPool
+     * @return null|PoolInterface
      */
-    public static function getPool(string $name): ?ConnectionPool
+    public static function getPool(string $name): ?PoolInterface
     {
         return isset(self::$pools[$name]) ? self::$pools[$name] : null;
     }
 
     /**
-     * @return array
+     * @return PoolInterface[]
      */
     public static function getPools(): array
     {
