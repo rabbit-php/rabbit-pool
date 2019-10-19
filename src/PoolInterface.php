@@ -8,7 +8,6 @@
 
 namespace rabbit\pool;
 
-
 /**
  * Interface PoolInterface
  */

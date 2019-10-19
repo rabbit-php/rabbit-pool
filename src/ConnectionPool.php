@@ -10,7 +10,6 @@ namespace rabbit\pool;
 
 use rabbit\core\BaseObject;
 use rabbit\core\Exception;
-use rabbit\helper\CoroHelper;
 use Swoole\Coroutine\Channel;
 
 /**
@@ -117,8 +116,12 @@ abstract class ConnectionPool extends BaseObject implements PoolInterface
 
         $maxWait = $this->poolConfig->getMaxWait();
         if ($maxWait != 0 && $stats['consumer_num'] >= $maxWait) {
-            throw new Exception(sprintf('Connection pool waiting queue is full, maxActive=%d,maxWait=%d,currentCount=%d',
-                $maxActive, $maxWait, $this->currentCount));
+            throw new Exception(sprintf(
+                'Connection pool waiting queue is full, maxActive=%d,maxWait=%d,currentCount=%d',
+                $maxActive,
+                $maxWait,
+                $this->currentCount
+            ));
         }
 
         $maxWaitTime = $this->poolConfig->getMaxWaitTime();
@@ -165,7 +168,8 @@ abstract class ConnectionPool extends BaseObject implements PoolInterface
         $maxWaitTime = $this->poolConfig->getMaxWaitTime();
         for ($i = 0; $i < $moreActive; $i++) {
             /* @var ConnectionInterface $connection */
-            $connection = $this->getOriginalConnection($isChannel);;
+            $connection = $this->getOriginalConnection($isChannel);
+            ;
             $lastTime = $connection->getLastTime();
             if ($maxWaitTime === 0 || $time - $lastTime < $maxWaitTime) {
                 return $connection;
@@ -211,7 +215,7 @@ abstract class ConnectionPool extends BaseObject implements PoolInterface
             if ($this->poolConfig->getMaxWait() > 0 && $this->poolConfig->getWaitStack()->count() > $this->poolConfig->getMaxWait()) {
                 throw new Exception('Connection pool queue is full');
             }
-            $this->poolConfig->getWaitStack()->push(CoroHelper::getId());
+            $this->poolConfig->getWaitStack()->push(\Co::getCid());
             if (\Swoole\Coroutine::suspend() == false) {
                 $this->poolConfig->getWaitStack()->pop();
                 throw new Exception('Reach max connections! Can not pending fetch!');

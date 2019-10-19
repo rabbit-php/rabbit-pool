@@ -8,7 +8,6 @@
 
 namespace rabbit\pool;
 
-
 use rabbit\contract\ResultInterface;
 use rabbit\parser\ParserInterface;
 

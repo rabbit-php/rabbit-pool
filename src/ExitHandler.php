@@ -8,7 +8,6 @@
 
 namespace rabbit\pool;
 
-
 use rabbit\server\WorkerHandlerInterface;
 
 /**
@@ -21,5 +20,4 @@ class ExitHandler implements WorkerHandlerInterface
     {
         PoolManager::release();
     }
-
 }

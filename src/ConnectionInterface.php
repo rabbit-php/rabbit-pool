@@ -85,5 +85,4 @@ interface ConnectionInterface
      * @return void
      */
     public function release($release = false): void;
-
 }
