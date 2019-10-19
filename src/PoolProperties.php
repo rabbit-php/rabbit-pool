@@ -86,7 +86,7 @@ class PoolProperties extends BaseObject implements PoolConfigInterface
     /**
      * @var int
      */
-    protected $maxReconnect = -1;
+    protected $maxReconnect = 3;
 
     /**
      * Initialize
