@@ -283,16 +283,28 @@ abstract class ConnectionPool extends BaseObject implements PoolInterface
         return $serviceList[array_rand($serviceList)];
     }
 
-    protected function getServiceList()
+    protected function getServiceList(): array
     {
         $name = $this->poolConfig->getName();
-        $uri = $this->poolConfig->getUri();
-        if (empty($uri)) {
+        $uris = $this->poolConfig->getUri();
+        if (empty($uris)) {
             $error = sprintf('Service does not configure uri name=%s', $name);
             throw new \InvalidArgumentException($error);
         }
-
-        return $uri;
+        $ips = [];
+        foreach ($uris as $uri) {
+            if (filter_var($uri, FILTER_VALIDATE_IP)) {
+                $ips[] = $uri;
+                continue;
+            }
+            $res = \Co::getaddrinfo($uri);
+            if ($res) {
+                $ips[] = array_merge($ips, $res);
+            } else {
+                $ips[] = $uri;
+            }
+        }
+        return $ips;
     }
 
     /**
