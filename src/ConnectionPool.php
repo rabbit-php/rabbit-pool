@@ -283,7 +283,10 @@ abstract class ConnectionPool extends BaseObject implements PoolInterface
         return $serviceList[array_rand($serviceList)];
     }
 
-    protected function getServiceList(): array
+    /**
+     * @return array
+     */
+    public function getServiceList(): array
     {
         $name = $this->poolConfig->getName();
         $uris = $this->poolConfig->getUri();

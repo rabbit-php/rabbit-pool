@@ -38,6 +38,11 @@ interface PoolInterface
     public function getConnectionAddress(): string;
 
     /**
+     * @return array
+     */
+    public function getServiceList(): array;
+
+    /**
      * @return PoolConfigInterface
      */
     public function getPoolConfig(): PoolConfigInterface;
