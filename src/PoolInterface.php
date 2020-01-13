@@ -33,14 +33,15 @@ interface PoolInterface
     public function release(ConnectionInterface $connection);
 
     /**
+     * @param bool $parse
      * @return string
      */
-    public function getConnectionAddress(): string;
+    public function getConnectionAddress(bool $parse = false): string;
 
     /**
      * @return array
      */
-    public function getServiceList(): array;
+    public function getServiceList(bool $parse = false): array;
 
     /**
      * @return PoolConfigInterface

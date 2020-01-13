@@ -10,6 +10,7 @@ namespace rabbit\pool;
 
 use rabbit\core\BaseObject;
 use rabbit\core\Exception;
+use rabbit\helper\UrlHelper;
 use Swoole\Coroutine\Channel;
 
 /**
@@ -169,7 +170,6 @@ abstract class ConnectionPool extends BaseObject implements PoolInterface
         for ($i = 0; $i < $moreActive; $i++) {
             /* @var ConnectionInterface $connection */
             $connection = $this->getOriginalConnection($isChannel);
-            ;
             $lastTime = $connection->getLastTime();
             if ($maxWaitTime === 0 || $time - $lastTime < $maxWaitTime) {
                 return $connection;
@@ -275,18 +275,19 @@ abstract class ConnectionPool extends BaseObject implements PoolInterface
     }
 
     /**
+     * @param bool $parse
      * @return string
      */
-    public function getConnectionAddress(): string
+    public function getConnectionAddress(bool $parse = false): string
     {
-        $serviceList = $this->getServiceList();
+        $serviceList = $this->getServiceList($parse);
         return $serviceList[array_rand($serviceList)];
     }
 
     /**
      * @return array
      */
-    public function getServiceList(): array
+    public function getServiceList(bool $parse = false): array
     {
         $name = $this->poolConfig->getName();
         $uris = $this->poolConfig->getUri();
@@ -294,20 +295,31 @@ abstract class ConnectionPool extends BaseObject implements PoolInterface
             $error = sprintf('Service does not configure uri name=%s', $name);
             throw new \InvalidArgumentException($error);
         }
-        $ips = [];
-        foreach ($uris as $uri) {
-            if (filter_var($uri, FILTER_VALIDATE_IP)) {
-                $ips[] = $uri;
-                continue;
+
+        if ($parse) {
+            $ips = [];
+            foreach ($uris as $uri) {
+                $url = parse_url($uri);
+                if (!isset($url['host'])) {
+                    continue;
+                }
+                if (filter_var($url['host'], FILTER_VALIDATE_IP)) {
+                    $ips[] = $uri;
+                    continue;
+                }
+                $res = \Co::getaddrinfo($url['host']);
+                if ($res) {
+                    foreach ($res as $ip) {
+                        $url['host'] = $ip;
+                        $ips[] = UrlHelper::unparse_url($url);
+                    }
+                } else {
+                    $ips[] = $uri;
+                }
             }
-            $res = \Co::getaddrinfo($uri);
-            if ($res) {
-                $ips[] = array_merge($ips, $res);
-            } else {
-                $ips[] = $uri;
-            }
+            return $ips;
         }
-        return $ips;
+        return $uris;
     }
 
     /**
