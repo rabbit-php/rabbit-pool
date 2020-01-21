@@ -297,27 +297,7 @@ abstract class ConnectionPool extends BaseObject implements PoolInterface
         }
 
         if ($parse) {
-            $ips = [];
-            foreach ($uris as $uri) {
-                $url = parse_url($uri);
-                if (!isset($url['host'])) {
-                    continue;
-                }
-                if (filter_var($url['host'], FILTER_VALIDATE_IP)) {
-                    $ips[] = $uri;
-                    continue;
-                }
-                $res = \Co::getaddrinfo($url['host']);
-                if ($res) {
-                    foreach ($res as $ip) {
-                        $url['host'] = $ip;
-                        $ips[] = UrlHelper::unparse_url($url);
-                    }
-                } else {
-                    $ips[] = $uri;
-                }
-            }
-            return $ips;
+            return UrlHelper::dns2IP($uris);
         }
         return $uris;
     }
