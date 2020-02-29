@@ -267,10 +267,10 @@ abstract class ConnectionPool extends BaseObject implements PoolInterface
     {
         if ($this->queue->count() < $this->poolConfig->getMaxActive()) {
             $this->queue->push($connection);
-            if ($this->poolConfig->getWaitStack()->count() > 0) {
-                $id = $this->poolConfig->getWaitStack()->shift();
-                \Swoole\Coroutine::resume($id);
-            }
+        }
+        if ($this->poolConfig->getWaitStack()->count() > 0) {
+            $id = $this->poolConfig->getWaitStack()->shift();
+            \Swoole\Coroutine::resume($id);
         }
     }
 
