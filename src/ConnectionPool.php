@@ -99,85 +99,37 @@ abstract class ConnectionPool extends BaseObject implements PoolInterface
     private function getConnectionByChannel(): ConnectionInterface
     {
         if ($this->channel === null) {
-            $this->channel = new Channel($this->poolConfig->getMaxActive());
+            $this->channel = new Channel($this->poolConfig->getMinActive());
         }
 
         $stats = $this->channel->stats();
         if ($stats['queue_num'] > 0) {
-            return $this->getEffectiveConnection($stats['queue_num']);
-        }
-
-        $maxActive = $this->poolConfig->getMaxActive();
-        if ($this->currentCount < $maxActive) {
-            $connection = $this->createConnection();
-            $this->currentCount++;
-
-            return $connection;
-        }
-
-        $maxWait = $this->poolConfig->getMaxWait();
-        if ($maxWait != 0 && $stats['consumer_num'] >= $maxWait) {
-            throw new Exception(sprintf(
-                'Connection pool waiting queue is full, maxActive=%d,maxWait=%d,currentCount=%d',
-                $maxActive,
-                $maxWait,
-                $this->currentCount
-            ));
-        }
-
-        $maxWaitTime = $this->poolConfig->getMaxWaitTime();
-        if ($maxWaitTime == 0) {
-            return $this->channel->pop();
-        }
-
-        $result = $this->channel->pop($maxWaitTime);
-        if ($result === false) {
-            throw new Exception('Connection pool waiting queue timeout, timeout=' . $maxWaitTime);
-        }
-        return $result;
-
-        $writes = [];
-        $reads = [$this->channel];
-        $result = $this->channel->select($reads, $writes, $maxWaitTime);
-
-        if ($result === false || empty($reads)) {
-            throw new Exception('Connection pool waiting queue timeout, timeout=' . $maxWaitTime);
-        }
-
-        $readChannel = $reads[0];
-
-        return $readChannel->pop();
-    }
-
-    /**
-     * Get effective connection
-     *
-     * @param int $queueNum
-     * @param bool $isChannel
-     *
-     * @return ConnectionInterface
-     */
-    private function getEffectiveConnection(int $queueNum, bool $isChannel = true): ConnectionInterface
-    {
-        $minActive = $this->poolConfig->getMinActive();
-        if ($queueNum <= $minActive) {
             return $this->getOriginalConnection($isChannel);
         }
 
-        $time = time();
-        $moreActive = $queueNum - $minActive;
-        $maxWaitTime = $this->poolConfig->getMaxWaitTime();
-        for ($i = 0; $i < $moreActive; $i++) {
-            /* @var ConnectionInterface $connection */
-            $connection = $this->getOriginalConnection($isChannel);
-            $lastTime = $connection->getLastTime();
-            if ($maxWaitTime === 0 || $time - $lastTime < $maxWaitTime) {
-                return $connection;
+        $maxActive = $this->poolConfig->getMaxActive();
+        if ($this->currentCount >= $maxActive) {
+            $maxWaitTime = $this->poolConfig->getMaxWaitTime();
+            if ($maxWaitTime === 0) {
+                return $this->channel->pop();
             }
-            $this->currentCount--;
+
+            $result = $this->channel->pop($maxWaitTime);
+            if ($result === false) {
+                throw new Exception('Connection pool waiting queue timeout, timeout=' . $maxWaitTime);
+            }
+            return $result;
         }
 
-        return $this->getOriginalConnection($isChannel);
+        try {
+            $this->currentCount++;
+            $connection = $this->createConnection();
+        } catch (\Throwable $exception) {
+            $this->currentCount--;
+            throw new Exception('Connection create failed');
+        }
+
+        return $connection;
     }
 
     /**
@@ -208,7 +160,7 @@ abstract class ConnectionPool extends BaseObject implements PoolInterface
             $this->queue = new \SplQueue();
         }
         if (!$this->queue->isEmpty()) {
-            return $this->getEffectiveConnection($this->queue->count(), false);
+            return $this->getOriginalConnection(false);
         }
 
         if ($this->currentCount >= $this->poolConfig->getMaxActive()) {
@@ -216,15 +168,18 @@ abstract class ConnectionPool extends BaseObject implements PoolInterface
                 throw new Exception('Connection pool queue is full');
             }
             $this->poolConfig->getWaitStack()->push(\Co::getCid());
-            if (\Swoole\Coroutine::suspend() == false) {
-                $this->poolConfig->getWaitStack()->pop();
-                throw new Exception('Reach max connections! Can not pending fetch!');
-            }
-            return $this->getEffectiveConnection($this->queue->count(), false);
+            \CO::yield();
+            return $this->getOriginalConnection($this->queue->count(), false);
         }
 
-        $connect = $this->createConnection();
-        $this->currentCount++;
+        try {
+            $this->currentCount++;
+            $connect = $this->createConnection();
+        } catch (\Throwable $exception) {
+            $this->currentCount--;
+            throw new Exception('Connection create failed');
+        }
+
 
         return $connect;
     }
@@ -252,9 +207,11 @@ abstract class ConnectionPool extends BaseObject implements PoolInterface
     private function releaseToChannel(ConnectionInterface $connection)
     {
         $stats = $this->channel->stats();
-        $maxActive = $this->poolConfig->getMaxActive();
+        $maxActive = $this->poolConfig->getMinActive();
         if ($stats['queue_num'] < $maxActive) {
             $this->channel->push($connection);
+        } else {
+            $this->currentCount--;
         }
     }
 
@@ -265,8 +222,10 @@ abstract class ConnectionPool extends BaseObject implements PoolInterface
      */
     private function releaseToQueue(ConnectionInterface $connection)
     {
-        if ($this->queue->count() < $this->poolConfig->getMaxActive()) {
+        if ($this->queue->count() < $this->poolConfig->getMinActive()) {
             $this->queue->push($connection);
+        } else {
+            $this->currentCount--;
         }
         if ($this->poolConfig->getWaitStack()->count() > 0) {
             $id = $this->poolConfig->getWaitStack()->shift();
