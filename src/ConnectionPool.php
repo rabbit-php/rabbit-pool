@@ -104,7 +104,7 @@ abstract class ConnectionPool extends BaseObject implements PoolInterface
 
         $stats = $this->channel->stats();
         if ($stats['queue_num'] > 0) {
-            return $this->getOriginalConnection($isChannel);
+            return $this->getOriginalConnection(true);
         }
 
         $maxActive = $this->poolConfig->getMaxActive();
@@ -169,7 +169,7 @@ abstract class ConnectionPool extends BaseObject implements PoolInterface
             }
             $this->poolConfig->getWaitStack()->push(\Co::getCid());
             \CO::yield();
-            return $this->getOriginalConnection($this->queue->count(), false);
+            return $this->getOriginalConnection(false);
         }
 
         try {
