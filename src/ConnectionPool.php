@@ -177,7 +177,7 @@ abstract class ConnectionPool extends BaseObject implements PoolInterface
             $connect = $this->createConnection();
         } catch (\Throwable $exception) {
             $this->currentCount--;
-            throw new Exception('Connection create failed');
+            throw new Exception('Connection create failed!' . $exception->getMessage());
         }
 
 
