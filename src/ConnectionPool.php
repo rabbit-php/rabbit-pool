@@ -83,10 +83,6 @@ abstract class ConnectionPool extends BaseObject implements PoolInterface
         } else {
             $connection = $this->getConnectionByQueue();
         }
-
-        if ($connection->check() === false) {
-            $connection->reconnect();
-        }
         return $connection;
     }
 
