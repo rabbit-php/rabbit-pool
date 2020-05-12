@@ -86,6 +86,14 @@ abstract class ConnectionPool extends BaseObject implements PoolInterface
         return $connection;
     }
 
+    /**
+     * @return int
+     */
+    public function getCurrentCount(): int
+    {
+        return $this->currentCount;
+    }
+
     /***
      * Get connection by channel
      *

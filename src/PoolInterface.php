@@ -62,4 +62,9 @@ interface PoolInterface
      * @return null|\SplQueue
      */
     public function getQueuePool(): ?\SplQueue;
+
+    /**
+     * @return int
+     */
+    public function getCurrentCount(): int;
 }
