@@ -51,6 +51,11 @@ interface PoolConfigInterface extends Arrayable
     public function getUri(): array;
 
     /**
+     * @param $uri
+     */
+    public function setUri($uri):void;
+
+    /**
      * @return int
      */
     public function getMinActive(): int;

@@ -156,6 +156,14 @@ class PoolProperties extends BaseObject implements PoolConfigInterface
     }
 
     /**
+     * @param $uri
+     */
+    public function setUri($uri): void
+    {
+        $this->uri = $uri;
+    }
+
+    /**
      * @return int
      */
     public function getMinActive(): int
