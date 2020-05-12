@@ -67,4 +67,9 @@ interface PoolInterface
      * @return int
      */
     public function getCurrentCount(): int;
+
+    /**
+     * @return bool
+     */
+    public function getUseChannel(): bool;
 }

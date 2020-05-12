@@ -74,6 +74,14 @@ abstract class ConnectionPool extends BaseObject implements PoolInterface
     }
 
     /**
+     * @return bool
+     */
+    public function getUseChannel(): bool
+    {
+        return $this->useChannel;
+    }
+
+    /**
      * @return ConnectionInterface
      */
     public function getConnection(): ConnectionInterface
