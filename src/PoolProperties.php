@@ -45,23 +45,11 @@ class PoolProperties extends BaseObject implements PoolConfigInterface
     protected $maxWait = 20;
 
     /**
-     * @var \SplQueue
-     */
-    protected $waitStack;
-
-    /**
      * Maximum waiting time
      *
      * @var int
      */
-    protected $maxWaitTime = 3;
-
-    /**
-     * Maximum idle time
-     *
-     * @var int
-     */
-    protected $maxIdleTime = 60;
+    protected $maxWaitTime = 0;
 
     /**
      * Connection timeout
@@ -96,7 +84,6 @@ class PoolProperties extends BaseObject implements PoolConfigInterface
         if (empty($this->name)) {
             $this->name = uniqid();
         }
-        $this->waitStack = new \SplQueue();
     }
 
     /**
@@ -129,11 +116,6 @@ class PoolProperties extends BaseObject implements PoolConfigInterface
     public function getMaxWait(): int
     {
         return $this->maxWait;
-    }
-
-    public function getWaitStack(): \SplQueue
-    {
-        return $this->waitStack;
     }
 
     /**
@@ -177,14 +159,6 @@ class PoolProperties extends BaseObject implements PoolConfigInterface
     public function getMaxWaitTime(): int
     {
         return $this->maxWaitTime;
-    }
-
-    /**
-     * @return int
-     */
-    public function getMaxIdleTime(): int
-    {
-        return $this->maxIdleTime;
     }
 
     public function getMaxReonnect(): int

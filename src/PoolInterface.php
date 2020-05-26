@@ -56,20 +56,10 @@ interface PoolInterface
     /**
      * @return \Swoole\Coroutine\Channel
      */
-    public function getChannelPool(): ?\Swoole\Coroutine\Channel;
-
-    /**
-     * @return null|\SplQueue
-     */
-    public function getQueuePool(): ?\SplQueue;
+    public function getPool(): ?\Swoole\Coroutine\Channel;
 
     /**
      * @return int
      */
     public function getCurrentCount(): int;
-
-    /**
-     * @return bool
-     */
-    public function getUseChannel(): bool;
 }

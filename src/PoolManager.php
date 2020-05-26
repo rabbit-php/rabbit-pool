@@ -54,14 +54,13 @@ class PoolManager
     public static function release(): void
     {
         foreach (self::$pools as $name => $pool) {
-            if (($channel = $pool->getChannelPool()) !== null) {
+            if (($channel = $pool->getPool()) !== null) {
                 while (!$channel->isEmpty()) {
-                    $channel->pop();
-                }
-            }
-            if (($queue = $pool->getQueuePool()) !== null) {
-                while ($queue->count() > 0) {
-                    $queue->pop();
+                    $conn = $channel->pop();
+                    if (method_exists($conn, 'close')) {
+                        $conn->close();
+                    }
+                    unset($conn);
                 }
             }
         }
