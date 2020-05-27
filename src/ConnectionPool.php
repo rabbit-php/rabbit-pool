@@ -100,7 +100,6 @@ abstract class ConnectionPool extends BaseObject implements PoolInterface
         $connection->setRecv(true);
         $connection->setAutoRelease(true);
 
-        $maxActive = $this->poolConfig->getMinActive();
         if (!$this->channel->isFull()) {
             $this->channel->push($connection);
         } else {
