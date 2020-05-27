@@ -65,10 +65,10 @@ abstract class ConnectionPool extends BaseObject implements PoolInterface
 
         $maxActive = $this->poolConfig->getMaxActive();
         if ($this->currentCount >= $maxActive) {
-            $maxWaitTime = $this->poolConfig->getMaxWaitTime();
-            $result = $this->channel->pop($maxWaitTime > 0 ? $maxWaitTime : null);
+            $maxWait = $this->poolConfig->getMaxWait();
+            $result = $this->channel->pop($maxWait > 0 ? $maxWait : null);
             if ($result === false) {
-                throw new Exception('Connection pool waiting queue timeout, timeout=' . $maxWaitTime);
+                throw new Exception('Connection pool waiting queue timeout, timeout=' . $maxWait);
             }
             return $result;
         }

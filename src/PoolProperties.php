@@ -42,14 +42,7 @@ class PoolProperties extends BaseObject implements PoolConfigInterface
      *
      * @var int
      */
-    protected $maxWait = 20;
-
-    /**
-     * Maximum waiting time
-     *
-     * @var int
-     */
-    protected $maxWaitTime = 0;
+    protected $maxWait = 0;
 
     /**
      * Connection timeout
@@ -151,14 +144,6 @@ class PoolProperties extends BaseObject implements PoolConfigInterface
     public function getMinActive(): int
     {
         return $this->minActive;
-    }
-
-    /**
-     * @return int
-     */
-    public function getMaxWaitTime(): int
-    {
-        return $this->maxWaitTime;
     }
 
     public function getMaxReonnect(): int
