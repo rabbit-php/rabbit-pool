@@ -55,9 +55,10 @@ abstract class ConnectionPool extends BaseObject implements PoolInterface
     }
 
     /**
-     * @return ConnectionInterface
+     * @return mixed|ConnectionInterface
+     * @throws Exception
      */
-    public function getConnection(): ConnectionInterface
+    public function getConnection()
     {
         if (!$this->channel->isEmpty()) {
             return $this->channel->pop();
@@ -93,13 +94,11 @@ abstract class ConnectionPool extends BaseObject implements PoolInterface
     }
 
     /**
-     * @param ConnectionInterface $connection
+     * @param $connection
+     * @return mixed|void
      */
-    public function release(ConnectionInterface $connection)
+    public function release($connection)
     {
-        $connection->setRecv(true);
-        $connection->setAutoRelease(true);
-
         if (!$this->channel->isFull()) {
             $this->channel->push($connection);
         } else {

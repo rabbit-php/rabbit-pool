@@ -19,18 +19,15 @@ interface PoolInterface
     public function createConnection(): ConnectionInterface;
 
     /**
-     * Get a connection
-     *
-     * @return ConnectionInterface
+     * @return mixed
      */
-    public function getConnection(): ConnectionInterface;
+    public function getConnection();
 
     /**
-     * Relesea the connection
-     *
-     * @param ConnectionInterface $connection
+     * @param $connection
+     * @return mixed
      */
-    public function release(ConnectionInterface $connection);
+    public function release($connection);
 
     /**
      * @param bool $parse
