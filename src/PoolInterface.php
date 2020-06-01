@@ -58,5 +58,5 @@ interface PoolInterface
     /**
      * @return int
      */
-    public function getCurrentCount(): int;
+    public function sub(): int;
 }

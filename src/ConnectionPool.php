@@ -88,9 +88,9 @@ abstract class ConnectionPool extends BaseObject implements PoolInterface
     /**
      * @return int
      */
-    public function getCurrentCount(): int
+    public function sub(): int
     {
-        return $this->currentCount;
+        return $this->currentCount--;
     }
 
     /**
