@@ -42,7 +42,7 @@ class PoolProperties extends BaseObject implements PoolConfigInterface
      *
      * @var int
      */
-    protected $maxWait = 0;
+    protected $maxWait = 3;
 
     /**
      * Connection timeout
