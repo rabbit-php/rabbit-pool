@@ -45,7 +45,7 @@ abstract class ConnectionPool extends BaseObject implements PoolInterface
     public function __construct(PoolConfigInterface $poolConfig)
     {
         $this->poolConfig = $poolConfig;
-        $this->channel = new Channel($poolConfig->getMaxActive());
+        $this->channel = new Channel($poolConfig->getMinActive());
         PoolManager::setPool($this);
     }
 
@@ -65,7 +65,7 @@ abstract class ConnectionPool extends BaseObject implements PoolInterface
         }
 
         $maxActive = $this->poolConfig->getMaxActive();
-        if ($this->currentCount >= $maxActive) {
+        if ($maxActive > 0 && $this->currentCount >= $maxActive) {
             $maxWait = $this->poolConfig->getMaxWait();
             $result = $this->channel->pop($maxWait > 0 ? $maxWait : null);
             if ($result === false) {
