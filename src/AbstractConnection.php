@@ -22,26 +22,9 @@ abstract class AbstractConnection implements ConnectionInterface
     protected $poolKey;
 
     /**
-     * @var int
-     */
-    protected $lastTime;
-
-    /**
-     * @var string
-     */
-    protected $connectionId;
-
-    /**
      * @var bool
      */
     protected $autoRelease = true;
-
-    /**
-     * Whether or not the package has been recv,default true
-     *
-     * @var bool
-     */
-    protected $recv = true;
     /** @var int */
     protected $retries = 3;
     /** @var int */
@@ -54,34 +37,8 @@ abstract class AbstractConnection implements ConnectionInterface
      */
     public function __construct(string $poolKey)
     {
-        $this->lastTime = time();
-        $this->connectionId = uniqid();
         $this->poolKey = $poolKey;
         $this->createConnection();
-    }
-
-    /**
-     * @return int
-     */
-    public function getLastTime(): int
-    {
-        return $this->lastTime;
-    }
-
-    /**
-     * Update last time
-     */
-    public function updateLastTime(): void
-    {
-        $this->lastTime = time();
-    }
-
-    /**
-     * @return string
-     */
-    public function getConnectionId(): string
-    {
-        return $this->connectionId;
     }
 
     /**
@@ -90,22 +47,6 @@ abstract class AbstractConnection implements ConnectionInterface
     public function getPool(): PoolInterface
     {
         return PoolManager::getPool($this->poolKey);
-    }
-
-    /**
-     * @return bool
-     */
-    public function isRecv(): bool
-    {
-        return $this->recv;
-    }
-
-    /**
-     * @param bool $recv
-     */
-    public function setRecv(bool $recv): void
-    {
-        $this->recv = $recv;
     }
 
     /**
@@ -132,14 +73,5 @@ abstract class AbstractConnection implements ConnectionInterface
     public function setAutoRelease(bool $autoRelease): void
     {
         $this->autoRelease = $autoRelease;
-    }
-
-    /**
-     * @param bool $defer
-     * @throws NotSupportedException
-     */
-    public function setDefer($defer = true): bool
-    {
-        throw new NotSupportedException('can not call ' . __METHOD__);
     }
 }

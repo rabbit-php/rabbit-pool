@@ -27,26 +27,6 @@ interface ConnectionInterface
     public function reconnect(): void;
 
     /**
-     * @return bool
-     */
-    public function check(): bool;
-
-    /**
-     * @return int
-     */
-    public function getLastTime(): int;
-
-    /**
-     * @return void
-     */
-    public function updateLastTime(): void;
-
-    /**
-     * @return string
-     */
-    public function getConnectionId(): string;
-
-    /**
      * @return PoolInterface
      */
     public function getPool(): PoolInterface;
@@ -57,29 +37,9 @@ interface ConnectionInterface
     public function isAutoRelease(): bool;
 
     /**
-     * @return bool
-     */
-    public function isRecv(): bool;
-
-    /**
      * @param bool $autoRelease
      */
     public function setAutoRelease(bool $autoRelease): void;
-
-    /**
-     * @param bool $recv
-     */
-    public function setRecv(bool $recv): void;
-
-    /**
-     * @return mixed
-     */
-    public function receive(float $timeout = -1);
-
-    /**
-     * @param bool $defer
-     */
-    public function setDefer($defer = true): bool;
 
     /**
      * @return void
