@@ -89,7 +89,7 @@ abstract class AbstractConnection implements ConnectionInterface
      */
     public function getPool(): PoolInterface
     {
-        return $this->pool;
+        return PoolManager::getPool($this->poolKey);
     }
 
     /**
