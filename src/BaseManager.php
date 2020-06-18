@@ -11,7 +11,7 @@ use rabbit\exception\NotSupportedException;
  */
 class BaseManager
 {
-    protected $connections = [];
+    protected $items = [];
 
     /**
      * Manager constructor.
@@ -27,9 +27,9 @@ class BaseManager
      */
     public function add(array $configs): void
     {
-        foreach ($configs as $name => $connection) {
-            if (!isset($this->connections[$name])) {
-                $this->connections[$name] = $connection;
+        foreach ($configs as $name => $item) {
+            if (!isset($this->items[$name])) {
+                $this->items[$name] = $item;
             }
         }
     }
@@ -40,10 +40,10 @@ class BaseManager
      */
     public function get(string $name = 'default')
     {
-        if (!isset($this->connections[$name])) {
+        if (!isset($this->items[$name])) {
             return null;
         }
-        return $this->connections[$name];
+        return $this->items[$name];
     }
 
     /**
@@ -52,7 +52,7 @@ class BaseManager
      */
     public function has(string $name): bool
     {
-        return isset($this->connections[$name]);
+        return isset($this->items[$name]);
     }
 
     /**
@@ -62,10 +62,10 @@ class BaseManager
      */
     public function __call($name, $arguments)
     {
-        $name = str_replace(['Connection', 'connection'], '', $name);
-        if (method_exists($this, $name)) {
-            $this->$name(...$arguments);
+        $name = substr($name, 0, 3);
+        if (!method_exists($this, $name)) {
+            throw new NotSupportedException(__CLASS__ . " has no method $name");
         }
-        throw new NotSupportedException(__CLASS__ . " has no method $name");
+        return $this->$name(...$arguments);
     }
 }
