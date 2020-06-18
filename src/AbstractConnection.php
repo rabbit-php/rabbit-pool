@@ -8,23 +8,12 @@
 
 namespace rabbit\pool;
 
-use rabbit\exception\NotSupportedException;
-
 /**
  * Class AbstractConnection
  * @package rabbit\pool
  */
-abstract class AbstractConnection implements ConnectionInterface
+abstract class AbstractConnection extends AbstractBase implements ConnectionInterface
 {
-    /**
-     * @var string
-     */
-    protected $poolKey;
-
-    /**
-     * @var bool
-     */
-    protected $autoRelease = true;
     /** @var int */
     protected $retries = 3;
     /** @var int */
@@ -37,16 +26,8 @@ abstract class AbstractConnection implements ConnectionInterface
      */
     public function __construct(string $poolKey)
     {
-        $this->poolKey = $poolKey;
+        parent::__construct($poolKey);
         $this->createConnection();
-    }
-
-    /**
-     * @return PoolInterface
-     */
-    public function getPool(): PoolInterface
-    {
-        return PoolManager::getPool($this->poolKey);
     }
 
     /**
@@ -57,21 +38,5 @@ abstract class AbstractConnection implements ConnectionInterface
         if ($this->isAutoRelease() || $release) {
             PoolManager::getPool($this->poolKey)->release($this);
         }
-    }
-
-    /**
-     * @return bool
-     */
-    public function isAutoRelease(): bool
-    {
-        return $this->autoRelease;
-    }
-
-    /**
-     * @param bool $autoRelease
-     */
-    public function setAutoRelease(bool $autoRelease): void
-    {
-        $this->autoRelease = $autoRelease;
     }
 }

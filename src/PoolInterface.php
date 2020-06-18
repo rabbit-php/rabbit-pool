@@ -14,14 +14,14 @@ namespace rabbit\pool;
 interface PoolInterface
 {
     /**
-     * @return ConnectionInterface
+     * @return mixed
      */
-    public function createConnection(): ConnectionInterface;
+    public function create();
 
     /**
      * @return mixed
      */
-    public function getConnection();
+    public function get();
 
     /**
      * @param $connection
@@ -30,25 +30,9 @@ interface PoolInterface
     public function release($connection);
 
     /**
-     * @param bool $parse
-     * @return string
-     */
-    public function getConnectionAddress(bool $parse = false): string;
-
-    /**
-     * @return array
-     */
-    public function getServiceList(bool $parse = false): array;
-
-    /**
      * @return PoolConfigInterface
      */
     public function getPoolConfig(): PoolConfigInterface;
-
-    /**
-     * @return int
-     */
-    public function getTimeout(): int;
 
     /**
      * @return \Swoole\Coroutine\Channel

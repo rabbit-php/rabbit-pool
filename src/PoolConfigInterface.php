@@ -24,7 +24,13 @@ interface PoolConfigInterface extends Arrayable
     /**
      * @return array
      */
-    public function getOptions(): array;
+    public function getConfig(): array;
+
+    /**
+     * @param array $config
+     */
+    public function setConfig(array $config): void;
+
     /**
      * @return int
      */
@@ -36,21 +42,6 @@ interface PoolConfigInterface extends Arrayable
     public function getMaxWait(): int;
 
     /**
-     * @return float
-     */
-    public function getTimeout(): float;
-
-    /**
-     * @return array
-     */
-    public function getUri(): array;
-
-    /**
-     * @param $uri
-     */
-    public function setUri($uri):void;
-
-    /**
      * @return int
      */
     public function getMinActive(): int;
@@ -58,5 +49,5 @@ interface PoolConfigInterface extends Arrayable
     /**
      * @return int
      */
-    public function getMaxReonnect():int;
+    public function getMaxRetry(): int;
 }
