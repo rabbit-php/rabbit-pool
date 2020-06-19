@@ -38,7 +38,7 @@ class Unity
             $client = $client->build();
         }
         try {
-            if (method_exists($client, $name)) {
+            if (is_callable([$client, $name])) {
                 return $client->$name(...$arguments);
             }
             throw new NotSupportedException(get_class($client) . " has no method $name");
