@@ -34,7 +34,7 @@ class BasePool extends BaseObject implements PoolInterface
     protected $channel;
 
     /** @var string */
-    protected $objclass;
+    protected $objClass;
 
     /**
      * BaseCompool constructor.
@@ -102,7 +102,7 @@ class BasePool extends BaseObject implements PoolInterface
     {
         $config = $this->getPoolConfig()->getConfig();
         return ObjectFactory::createObject([
-            'class' => $this->objclass,
+            'class' => $this->objClass,
             'poolKey' => $this->getPoolConfig()->getName()
         ], $config, false);
     }
