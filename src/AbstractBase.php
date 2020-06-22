@@ -24,7 +24,7 @@ abstract class AbstractBase extends BaseObject implements IBase
      * AbstractCom constructor.
      * @param string $poolKey
      */
-    public function __construct(string $poolKey = null)
+    public function __construct(string $poolKey)
     {
         $this->poolKey = $poolKey;
     }
