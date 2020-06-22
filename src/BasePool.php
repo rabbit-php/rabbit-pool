@@ -77,7 +77,7 @@ class BasePool extends BaseObject implements PoolInterface
             $maxWait = $this->poolConfig->getMaxWait();
             $result = $this->channel->pop($maxWait > 0 ? $maxWait : null);
             if ($result === false) {
-                throw new Exception('Connection pool waiting queue timeout, timeout=' . $maxWait);
+                throw new Exception('Pool waiting queue timeout, timeout=' . $maxWait);
             }
             return $result;
         }
@@ -87,7 +87,7 @@ class BasePool extends BaseObject implements PoolInterface
             $connection = $this->create();
         } catch (\Throwable $exception) {
             $this->currentCount--;
-            throw new Exception('Connection create failed');
+            throw $exception;
         }
 
         return $connection;
