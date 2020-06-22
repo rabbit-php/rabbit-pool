@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace rabbit\pool;
 
-use common\Ldap\Ldap;
 use rabbit\App;
 use rabbit\exception\NotSupportedException;
 
@@ -23,6 +22,26 @@ class Unity
     public function __construct(BasePool $pool)
     {
         $this->pool = $pool;
+    }
+
+    /**
+     * @param callable $function
+     * @throws \rabbit\core\Exception
+     */
+    public function __invoke(callable $function)
+    {
+        $client = $this->pool->get();
+        if ($client instanceof IUnity) {
+            $client = $client->build();
+        }
+        try {
+            return call_user_func($function, $client);
+        } catch (Throwable $exception) {
+            App::error($exception->getMessage());
+            throw $exception;
+        } finally {
+            $this->pool->release($client);
+        }
     }
 
     /**
