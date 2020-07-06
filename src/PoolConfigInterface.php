@@ -1,20 +1,15 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2018/10/15
- * Time: 19:07
- */
+declare(strict_types=1);
 
-namespace rabbit\pool;
+namespace Rabbit\Pool;
 
-use rabbit\contract\Arrayable;
+use Rabbit\Base\Contract\ArrayAble;
 
 /**
  * Interface PoolConfigInterface
- * @package rabbit\pool
+ * @package Rabbit\Pool
  */
-interface PoolConfigInterface extends Arrayable
+interface PoolConfigInterface extends ArrayAble
 {
     /**
      * @return string

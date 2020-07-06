@@ -1,28 +1,23 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2018/10/15
- * Time: 19:15
- */
+declare(strict_types=1);
 
-namespace rabbit\pool;
+namespace Rabbit\Pool;
 
 /**
  * Class AbstractConnection
- * @package rabbit\pool
+ * @package Rabbit\Pool
  */
 abstract class AbstractConnection extends AbstractBase implements ConnectionInterface
 {
     /** @var int */
-    protected $retries = 3;
+    protected int $retries = 3;
     /** @var int */
-    protected $retryDelay = 1;
+    protected int $retryDelay = 1;
 
     /**
      * AbstractConnection constructor.
      *
-     * @param PoolInterface $connectPool
+     * @param string $poolKey
      */
     public function __construct(string $poolKey)
     {

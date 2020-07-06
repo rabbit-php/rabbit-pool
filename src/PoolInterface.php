@@ -1,15 +1,13 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2018/10/15
- * Time: 18:54
- */
+declare(strict_types=1);
 
-namespace rabbit\pool;
+namespace Rabbit\Pool;
+
+use Swoole\Coroutine\Channel;
 
 /**
  * Interface PoolInterface
+ * @package Rabbit\Pool
  */
 interface PoolInterface
 {
@@ -35,9 +33,9 @@ interface PoolInterface
     public function getPoolConfig(): PoolConfigInterface;
 
     /**
-     * @return \Swoole\Coroutine\Channel
+     * @return Channel
      */
-    public function getPool(): ?\Swoole\Coroutine\Channel;
+    public function getPool(): ?Channel;
 
     /**
      * @return int

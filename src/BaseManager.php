@@ -1,17 +1,18 @@
 <?php
 declare(strict_types=1);
 
-namespace rabbit\pool;
+namespace Rabbit\Pool;
 
-use rabbit\exception\NotSupportedException;
+
+use Rabbit\Base\Exception\NotSupportedException;
 
 /**
  * Class BaseManager
- * @package rabbit\pool
+ * @package Rabbit\Pool
  */
 class BaseManager
 {
-    protected $items = [];
+    protected array $items = [];
 
     /**
      * Manager constructor.
@@ -58,6 +59,7 @@ class BaseManager
     /**
      * @param $name
      * @param $arguments
+     * @return mixed
      * @throws NotSupportedException
      */
     public function __call($name, $arguments)

@@ -1,28 +1,14 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2018/10/15
- * Time: 19:11
- */
+declare(strict_types=1);
 
-namespace rabbit\pool;
+namespace Rabbit\Pool;
 
 /**
  * Interface ConnectionInterface
- * @package rabbit\pool
+ * @package Rabbit\Pool
  */
 interface ConnectionInterface
 {
-    /**
-     * Create connectioin
-     *
-     * @return void
-     */
     public function createConnection(): void;
-
-    /**
-     * Reconnect
-     */
     public function reconnect(): void;
 }

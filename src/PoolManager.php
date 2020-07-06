@@ -1,23 +1,18 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2018/10/23
- * Time: 17:17
- */
+declare(strict_types=1);
 
-namespace rabbit\pool;
+namespace Rabbit\Pool;
 
 /**
  * Class PoolManager
- * @package rabbit\pool
+ * @package Rabbit\Pool
  */
 class PoolManager
 {
     /**
      * @var PoolInterface[]
      */
-    private static $pools = [];
+    private static array $pools = [];
 
     /**
      * @param PoolInterface $pool

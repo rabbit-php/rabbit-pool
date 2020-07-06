@@ -1,52 +1,48 @@
 <?php
 declare(strict_types=1);
 
-namespace rabbit\pool;
+namespace Rabbit\Pool;
 
 
-use rabbit\core\BaseObject;
+use Rabbit\Base\Core\BaseObject;
 
 /**
  * Class BasePoolProperties
- * @package rabbit\pool
+ * @package Rabbit\Pool
  */
 class BasePoolProperties extends BaseObject implements PoolConfigInterface
 {
-    /**
-     * Pool name
-     *
-     * @var string
-     */
-    protected $name = '';
+    /** @var string  */
+    protected string $name = '';
 
     /**
      * Minimum active number of connections
      *
      * @var int
      */
-    protected $minActive = 5;
+    protected int $minActive = 5;
 
     /**
      * Maximum active number of connections
      *
      * @var int
      */
-    protected $maxActive = 10;
+    protected int $maxActive = 10;
 
     /**
      * Maximum waiting for the number of connections, if there is no limit to 0
      *
      * @var int
      */
-    protected $maxWait = 3;
+    protected int $maxWait = 3;
 
     /** @var array */
-    protected $config = [];
+    protected array $config = [];
 
     /**
      * @var int
      */
-    protected $maxRetry = 3;
+    protected int $maxRetry = 3;
 
     /**
      * Initialize

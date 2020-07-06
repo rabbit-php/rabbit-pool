@@ -1,16 +1,18 @@
 <?php
+declare(strict_types=1);
 
+namespace Rabbit\Pool;
 
-namespace rabbit\pool;
-
-use rabbit\core\BaseObject;
-use rabbit\core\Exception;
-use rabbit\core\ObjectFactory;
-use Swoole\Coroutine\Channel;
+use Co\Channel;
+use DI\DependencyException;
+use DI\NotFoundException;
+use Rabbit\Base\Core\BaseObject;
+use Rabbit\Base\Core\Exception;
+use Throwable;
 
 /**
  * Class BasePool
- * @package rabbit\pool
+ * @package Rabbit\Pool
  */
 class BasePool extends BaseObject implements PoolInterface
 {
@@ -19,25 +21,25 @@ class BasePool extends BaseObject implements PoolInterface
      *
      * @var int
      */
-    protected $currentCount = 0;
+    protected int $currentCount = 0;
 
     /**
      * Pool config
      *
-     * @var ComPoolConfigInterface
+     * @var PoolConfigInterface
      */
-    protected $poolConfig;
+    protected PoolConfigInterface $poolConfig;
 
     /**
      * @var Channel
      */
-    protected $channel;
+    protected Channel $channel;
 
     /** @var string */
-    protected $objClass;
+    protected string $objClass;
 
     /**
-     * BaseCompool constructor.
+     * BasePool constructor.
      * @param PoolConfigInterface $poolConfig
      */
     public function __construct(PoolConfigInterface $poolConfig)
@@ -64,7 +66,7 @@ class BasePool extends BaseObject implements PoolInterface
 
     /**
      * @return mixed|ConnectionInterface
-     * @throws Exception
+     * @throws Throwable
      */
     public function get()
     {
@@ -85,7 +87,7 @@ class BasePool extends BaseObject implements PoolInterface
         try {
             $this->currentCount++;
             $connection = $this->create();
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
             $this->currentCount--;
             throw $exception;
         }
@@ -95,13 +97,13 @@ class BasePool extends BaseObject implements PoolInterface
 
     /**
      * @return mixed
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function create()
     {
         $config = $this->getPoolConfig()->getConfig();
-        return ObjectFactory::createObject([
+        return create([
             'class' => $this->objClass,
             'poolKey' => $this->getPoolConfig()->getName()
         ], $config, false);

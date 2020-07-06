@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace rabbit\pool;
+namespace Rabbit\Pool;
 
 /**
  * Interface IConnectionProperties
- * @package rabbit\pool
+ * @package Rabbit\Pool
  */
 interface IConnectionProperties
 {

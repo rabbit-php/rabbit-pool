@@ -1,23 +1,18 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2018/10/15
- * Time: 19:13
- */
+declare(strict_types=1);
 
-namespace rabbit\pool;
+namespace Rabbit\Pool;
 
 /**
  * Class PoolProperties
- * @package rabbit\pool
+ * @package Rabbit\Pool
  */
 class PoolProperties extends BasePoolProperties implements PoolConfigInterface, IConnectionProperties
 {
     /** @var int */
-    protected $timeout = 3;
+    protected int $timeout = 3;
     /** @var array */
-    protected $uri = [];
+    protected array $uri = [];
 
     /**
      * @return float

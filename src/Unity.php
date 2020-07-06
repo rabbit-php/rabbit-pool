@@ -1,19 +1,20 @@
 <?php
 declare(strict_types=1);
 
-namespace rabbit\pool;
+namespace Rabbit\Pool;
 
-use rabbit\App;
-use rabbit\exception\NotSupportedException;
+use Rabbit\Base\App;
+use Rabbit\Base\Exception\NotSupportedException;
+use Throwable;
 
 /**
  * Class Unity
- * @package rabbit\pool
+ * @package Rabbit\Pool
  */
 class Unity
 {
     /** @var BasePool */
-    protected $pool;
+    protected BasePool $pool;
 
     /**
      * Client constructor.
@@ -26,7 +27,8 @@ class Unity
 
     /**
      * @param callable $function
-     * @throws \rabbit\core\Exception
+     * @return mixed
+     * @throws Throwable
      */
     public function __invoke(callable $function)
     {
@@ -48,8 +50,7 @@ class Unity
      * @param $call
      * @param array $params
      * @return mixed
-     * @throws NotSupportedException
-     * @throws \rabbit\core\Exception
+     * @throws Throwable
      */
     protected function realCall($call, array $params = [])
     {
@@ -66,7 +67,7 @@ class Unity
                 } elseif (is_callable($call)) {
                     $result = call_user_func($call, $client);
                 } else {
-                    throw new NotSupportedException(get_class($client) . " has no method $name");
+                    throw new NotSupportedException(get_class($client) . " has no method");
                 }
                 $this->pool->release($client);
                 return $result;
@@ -79,5 +80,6 @@ class Unity
                 App::warning($exception->getMessage() . ' & retry!');
             }
         }
+        return null;
     }
 }

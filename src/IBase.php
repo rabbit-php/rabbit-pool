@@ -1,22 +1,23 @@
 <?php
+declare(strict_types=1);
 
+namespace Rabbit\Pool;
 
-namespace rabbit\pool;
-
-use rabbit\contract\InitInterface;
+use Rabbit\Base\Contract\InitInterface;
 
 /**
- * Interface ComInterface
- * @package rabbit\pool
+ * Interface IBase
+ * @package Rabbit\Pool
  */
 interface IBase extends InitInterface
 {
     /**
-     * @return ComPoolInterface
+     * @return PoolInterface
      */
     public function getPool(): PoolInterface;
 
     /**
+     * @param bool $release
      * @return void
      */
     public function release($release = false): void;

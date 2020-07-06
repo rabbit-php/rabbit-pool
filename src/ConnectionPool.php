@@ -1,21 +1,13 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2018/10/16
- * Time: 0:21
- */
+declare(strict_types=1);
 
-namespace rabbit\pool;
+namespace Rabbit\Pool;
 
-use rabbit\core\BaseObject;
-use rabbit\core\Exception;
-use rabbit\helper\UrlHelper;
-use Swoole\Coroutine\Channel;
+use Rabbit\Base\Helper\UrlHelper;
 
 /**
  * Class ConnectionPool
- * @package rabbit\pool
+ * @package Rabbit\Pool
  */
 abstract class ConnectionPool extends BasePool implements PoolInterface, IConnectionPool
 {
@@ -30,6 +22,7 @@ abstract class ConnectionPool extends BasePool implements PoolInterface, IConnec
     }
 
     /**
+     * @param bool $parse
      * @return array
      */
     public function getServiceList(bool $parse = false): array

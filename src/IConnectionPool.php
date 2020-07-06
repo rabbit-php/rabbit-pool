@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace rabbit\pool;
+namespace Rabbit\Pool;
 
 /**
  * Interface IConnectionPool
- * @package rabbit\pool
+ * @package Rabbit\Pool
  */
 interface IConnectionPool
 {
@@ -22,6 +22,7 @@ interface IConnectionPool
     public function getConnectionAddress(bool $parse = false): string;
 
     /**
+     * @param bool $parse
      * @return array
      */
     public function getServiceList(bool $parse = false): array;

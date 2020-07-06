@@ -1,24 +1,25 @@
 <?php
+declare(strict_types=1);
+
+namespace Rabbit\Pool;
 
 
-namespace rabbit\pool;
-
-use rabbit\core\BaseObject;
+use Rabbit\Base\Core\BaseObject;
 
 /**
- * Class AbstractCom
- * @package rabbit\compool
+ * Class AbstractBase
+ * @package Rabbit\Pool
  */
 abstract class AbstractBase extends BaseObject implements IBase
 {
     /**
      * @var string
      */
-    protected $poolKey;
+    protected string $poolKey;
     /**
      * @var bool
      */
-    protected $autoRelease = true;
+    protected bool $autoRelease = true;
 
     /**
      * AbstractCom constructor.
@@ -35,7 +36,7 @@ abstract class AbstractBase extends BaseObject implements IBase
     }
 
     /**
-     * @return ComPoolInterface
+     * @return PoolInterface
      */
     public function getPool(): PoolInterface
     {
