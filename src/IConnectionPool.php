@@ -11,9 +11,9 @@ interface IConnectionPool
 {
 
     /**
-     * @return int
+     * @return float
      */
-    public function getTimeout(): int;
+    public function getTimeout(): float;
 
     /**
      * @param bool $parse

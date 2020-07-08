@@ -43,7 +43,7 @@ abstract class ConnectionPool extends BasePool implements PoolInterface, IConnec
     /**
      * @return int
      */
-    public function getTimeout(): int
+    public function getTimeout(): float
     {
         return $this->poolConfig->getTimeout();
     }

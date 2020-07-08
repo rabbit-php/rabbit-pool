@@ -22,5 +22,5 @@ interface IConnectionProperties
     /**
      * @param $uri
      */
-    public function setUri($uri): void;
+    public function setUri(string $uri): void;
 }

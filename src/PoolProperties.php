@@ -12,7 +12,7 @@ class PoolProperties extends BasePoolProperties implements PoolConfigInterface, 
     /** @var int */
     protected int $timeout = 3;
     /** @var array */
-    protected array $uri = [];
+    protected ?string $uri = null;
 
     /**
      * @return float
@@ -27,16 +27,13 @@ class PoolProperties extends BasePoolProperties implements PoolConfigInterface, 
      */
     public function getUri(): array
     {
-        if (is_string($this->uri)) {
-            $this->uri = explode(',', $this->uri);
-        }
-        return $this->uri;
+        return explode(',', $this->uri);
     }
 
     /**
      * @param $uri
      */
-    public function setUri($uri): void
+    public function setUri(string $uri): void
     {
         $this->uri = $uri;
     }
