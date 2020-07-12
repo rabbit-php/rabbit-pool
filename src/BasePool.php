@@ -77,7 +77,7 @@ class BasePool extends BaseObject implements PoolInterface
         $maxActive = $this->poolConfig->getMaxActive();
         if ($maxActive > 0 && $this->currentCount >= $maxActive) {
             $maxWait = $this->poolConfig->getMaxWait();
-            $result = $this->channel->pop($maxWait > 0 ? $maxWait : null);
+            $result = $this->channel->pop($maxWait > 0 ? $maxWait : -1);
             if ($result === false) {
                 throw new Exception('Pool waiting queue timeout, timeout=' . $maxWait);
             }
