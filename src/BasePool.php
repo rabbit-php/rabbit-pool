@@ -8,6 +8,7 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use Rabbit\Base\Core\BaseObject;
 use Rabbit\Base\Core\Exception;
+use ReflectionException;
 use Throwable;
 
 /**
@@ -16,26 +17,9 @@ use Throwable;
  */
 class BasePool extends BaseObject implements PoolInterface
 {
-    /**
-     * Current connection count
-     *
-     * @var int
-     */
     protected int $currentCount = 0;
-
-    /**
-     * Pool config
-     *
-     * @var PoolConfigInterface
-     */
     protected PoolConfigInterface $poolConfig;
-
-    /**
-     * @var Channel
-     */
-    protected Channel $channel;
-
-    /** @var string */
+    protected ?Channel $channel;
     protected string $objClass;
 
     /**
@@ -98,7 +82,7 @@ class BasePool extends BaseObject implements PoolInterface
     /**
      * @return mixed
      * @throws DependencyException
-     * @throws NotFoundException
+     * @throws NotFoundException|ReflectionException
      */
     public function create()
     {

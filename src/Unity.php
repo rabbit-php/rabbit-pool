@@ -54,9 +54,9 @@ class Unity
      */
     protected function realCall($call, array $params = [])
     {
-        $retrys = $this->pool->getPoolConfig()->getMaxRetry();
-        $retrys = $retrys > 0 ? $retrys : 1;
-        while ($retrys--) {
+        $retries = $this->pool->getPoolConfig()->getMaxRetry();
+        $retries = $retries > 0 ? $retries : 1;
+        while ($retries--) {
             $client = $this->pool->get();
             if ($client instanceof IUnity) {
                 $client = $client->build();
@@ -73,7 +73,7 @@ class Unity
                 return $result;
             } catch (Throwable $exception) {
                 $this->pool->sub();
-                if ($retrys === 0) {
+                if ($retries === 0) {
                     App::error($exception->getMessage());
                     throw $exception;
                 }
