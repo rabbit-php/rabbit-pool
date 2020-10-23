@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rabbit\Pool;
@@ -45,6 +46,16 @@ class BaseManager
             return null;
         }
         return $this->items[$name];
+    }
+    
+    /**
+     * @Author Albert 63851587@qq.com
+     * @DateTime 2020-10-23
+     * @return array
+     */
+    public function getAll(): array
+    {
+        return $this->items;
     }
 
     /**
