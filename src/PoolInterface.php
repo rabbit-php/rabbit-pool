@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace Rabbit\Pool;
 
-use Swoole\Coroutine\Channel;
-
 /**
  * Interface PoolInterface
  * @package Rabbit\Pool
@@ -32,10 +30,7 @@ interface PoolInterface
      */
     public function getPoolConfig(): PoolConfigInterface;
 
-    /**
-     * @return Channel
-     */
-    public function getPool(): ?Channel;
+    public function getPool();
 
     /**
      * @return int

@@ -1,15 +1,15 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rabbit\Pool;
 
-use Co\Channel;
-use DI\DependencyException;
-use DI\NotFoundException;
-use Rabbit\Base\Core\BaseObject;
-use Rabbit\Base\Core\Exception;
-use ReflectionException;
 use Throwable;
+use ReflectionException;
+use DI\NotFoundException;
+use DI\DependencyException;
+use Rabbit\Base\Core\Exception;
+use Rabbit\Base\Core\BaseObject;
 
 /**
  * Class BasePool
@@ -19,7 +19,7 @@ class BasePool extends BaseObject implements PoolInterface
 {
     protected int $currentCount = 0;
     protected PoolConfigInterface $poolConfig;
-    protected ?Channel $channel;
+    protected $channel;
     protected string $objClass;
 
     /**
@@ -29,7 +29,7 @@ class BasePool extends BaseObject implements PoolInterface
     public function __construct(PoolConfigInterface $poolConfig)
     {
         $this->poolConfig = $poolConfig;
-        $this->channel = new Channel($poolConfig->getMinActive());
+        $this->channel = makeChannel($poolConfig->getMinActive());
         PoolManager::setPool($this);
     }
 
@@ -40,10 +40,7 @@ class BasePool extends BaseObject implements PoolInterface
         PoolManager::setPool($this);
     }
 
-    /**
-     * @return Channel|null
-     */
-    public function getPool(): ?\Swoole\Coroutine\Channel
+    public function getPool()
     {
         return $this->channel;
     }
@@ -61,10 +58,10 @@ class BasePool extends BaseObject implements PoolInterface
         $maxActive = $this->poolConfig->getMaxActive();
         if ($maxActive > 0 && $this->currentCount >= $maxActive) {
             $maxWait = $this->poolConfig->getMaxWait();
-            $result = $this->channel->pop($maxWait > 0 ? $maxWait : -1);
-            if ($result === false) {
+            if (!waitChannel($this->channel, floatval($maxWait > 0 ? $maxWait : -1))) {
                 throw new Exception('Pool waiting queue timeout, timeout=' . $maxWait);
             }
+            $result = $this->channel->pop();
             return $result;
         }
 
