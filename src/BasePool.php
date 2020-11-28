@@ -29,7 +29,6 @@ class BasePool extends BaseObject implements PoolInterface
     public function __construct(PoolConfigInterface $poolConfig)
     {
         $this->poolConfig = $poolConfig;
-        $this->channel = makeChannel($poolConfig->getMinActive());
         PoolManager::setPool($this);
     }
 
@@ -42,7 +41,7 @@ class BasePool extends BaseObject implements PoolInterface
 
     public function getPool()
     {
-        return $this->channel;
+        return $this->channel ??= makeChannel($this->poolConfig->getMinActive());
     }
 
     /**
@@ -51,6 +50,7 @@ class BasePool extends BaseObject implements PoolInterface
      */
     public function get()
     {
+        $this->channel ??= makeChannel($this->poolConfig->getMinActive());
         if (!$this->channel->isEmpty()) {
             return $this->channel->pop();
         }
