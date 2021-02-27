@@ -45,4 +45,6 @@ interface PoolConfigInterface extends ArrayAble
      * @return int
      */
     public function getMaxRetry(): int;
+
+    public function setName(string $name): void;
 }

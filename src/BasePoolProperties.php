@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rabbit\Pool;
@@ -118,5 +119,10 @@ class BasePoolProperties extends BaseObject implements PoolConfigInterface
     public function toArray(): array
     {
         return \get_object_vars($this);
+    }
+
+    public function setName(string $name): void
+    {
+        $this->name = $name;
     }
 }
