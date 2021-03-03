@@ -35,8 +35,8 @@ class BasePool extends BaseObject implements PoolInterface
     public function __clone()
     {
         $this->poolConfig = clone $this->poolConfig;
-        $this->channel = $this->channel ? clone $this->channel : null;
-        PoolManager::setPool($this);
+        $this->currentCount = 0;
+        $this->channel = makeChannel($this->poolConfig->getMinActive());
     }
 
     public function getPool()
