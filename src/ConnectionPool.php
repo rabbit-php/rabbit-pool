@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rabbit\Pool;
@@ -11,20 +12,12 @@ use Rabbit\Base\Helper\UrlHelper;
  */
 abstract class ConnectionPool extends BasePool implements PoolInterface, IConnectionPool
 {
-    /**
-     * @param bool $parse
-     * @return string
-     */
     public function getConnectionAddress(bool $parse = false): string
     {
         $serviceList = $this->getServiceList($parse);
         return $serviceList[array_rand($serviceList)];
     }
 
-    /**
-     * @param bool $parse
-     * @return array
-     */
     public function getServiceList(bool $parse = false): array
     {
         $name = $this->poolConfig->getName();
@@ -40,9 +33,6 @@ abstract class ConnectionPool extends BasePool implements PoolInterface, IConnec
         return $uris;
     }
 
-    /**
-     * @return int
-     */
     public function getTimeout(): float
     {
         return $this->poolConfig->getTimeout();

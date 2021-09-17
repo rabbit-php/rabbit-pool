@@ -13,41 +13,18 @@ use Rabbit\Base\Core\BaseObject;
  */
 class BasePoolProperties extends BaseObject implements PoolConfigInterface
 {
-    /** @var string  */
     protected string $name = '';
 
-    /**
-     * Minimum active number of connections
-     *
-     * @var int
-     */
     protected int $minActive = 5;
 
-    /**
-     * Maximum active number of connections
-     *
-     * @var int
-     */
     protected int $maxActive = 10;
 
-    /**
-     * Maximum waiting for the number of connections, if there is no limit to 0
-     *
-     * @var int
-     */
     protected int $maxWait = 3;
 
-    /** @var array */
     protected array $config = [];
 
-    /**
-     * @var int
-     */
     protected int $maxRetry = 3;
 
-    /**
-     * Initialize
-     */
     public function __construct()
     {
         if (empty($this->name)) {
@@ -60,49 +37,31 @@ class BasePoolProperties extends BaseObject implements PoolConfigInterface
         $this->name = uniqid();
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return array
-     */
     public function getConfig(): array
     {
         return $this->config;
     }
 
-    /**
-     * @param array $config
-     */
     public function setConfig(array $config): void
     {
         $this->config = $config;
     }
 
-    /**
-     * @return int
-     */
     public function getMaxActive(): int
     {
         return $this->maxActive;
     }
 
-    /**
-     * @return int
-     */
     public function getMaxWait(): int
     {
         return $this->maxWait;
     }
 
-    /**
-     * @return int
-     */
     public function getMinActive(): int
     {
         return $this->minActive;
@@ -113,9 +72,6 @@ class BasePoolProperties extends BaseObject implements PoolConfigInterface
         return $this->maxRetry;
     }
 
-    /**
-     * @return array
-     */
     public function toArray(): array
     {
         return \get_object_vars($this);

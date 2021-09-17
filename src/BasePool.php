@@ -5,11 +5,9 @@ declare(strict_types=1);
 namespace Rabbit\Pool;
 
 use Throwable;
-use ReflectionException;
-use DI\NotFoundException;
-use DI\DependencyException;
 use Rabbit\Base\Core\Exception;
 use Rabbit\Base\Core\BaseObject;
+use Rabbit\Base\Core\Channel;
 
 /**
  * Class BasePool
@@ -19,7 +17,7 @@ class BasePool extends BaseObject implements PoolInterface
 {
     protected int $currentCount = 0;
     protected PoolConfigInterface $poolConfig;
-    protected $channel;
+    protected Channel $channel;
     protected string $objClass;
 
     /**
@@ -36,21 +34,17 @@ class BasePool extends BaseObject implements PoolInterface
     {
         $this->poolConfig = clone $this->poolConfig;
         $this->currentCount = 0;
-        $this->channel = makeChannel($this->poolConfig->getMinActive());
+        $this->channel = new Channel($this->poolConfig->getMinActive());
     }
 
-    public function getPool()
+    public function getPool(): Channel
     {
-        return $this->channel ??= makeChannel($this->poolConfig->getMinActive());
+        return $this->channel ??= new Channel($this->poolConfig->getMinActive());
     }
 
-    /**
-     * @return mixed|ConnectionInterface
-     * @throws Throwable
-     */
-    public function get()
+    public function get(): object
     {
-        $this->channel ??= makeChannel($this->poolConfig->getMinActive());
+        $this->getPool();
         if (!$this->channel->isEmpty()) {
             return $this->channel->pop();
         }
@@ -75,12 +69,7 @@ class BasePool extends BaseObject implements PoolInterface
         return $connection;
     }
 
-    /**
-     * @return mixed
-     * @throws DependencyException
-     * @throws NotFoundException|ReflectionException
-     */
-    public function create()
+    public function create(): object
     {
         $config = $this->getPoolConfig()->getConfig();
         return create([
@@ -89,19 +78,12 @@ class BasePool extends BaseObject implements PoolInterface
         ], $config, false);
     }
 
-    /**
-     * @return int
-     */
     public function getCurrentCount(): int
     {
         return $this->currentCount;
     }
 
-    /**
-     * @param $connection
-     * @return mixed|void
-     */
-    public function release($connection)
+    public function release(object $connection): void
     {
         if (!$this->channel->isFull()) {
             $this->channel->push($connection);
@@ -114,17 +96,11 @@ class BasePool extends BaseObject implements PoolInterface
         }
     }
 
-    /**
-     * @return PoolConfigInterface
-     */
     public function getPoolConfig(): PoolConfigInterface
     {
         return $this->poolConfig;
     }
 
-    /**
-     * @return int
-     */
     public function sub(): int
     {
         return $this->currentCount--;

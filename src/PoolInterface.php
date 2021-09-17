@@ -1,7 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rabbit\Pool;
+
+use Rabbit\Base\Core\Channel;
 
 /**
  * Interface PoolInterface
@@ -9,36 +12,17 @@ namespace Rabbit\Pool;
  */
 interface PoolInterface
 {
-    /**
-     * @return mixed
-     */
-    public function create();
+    public function create(): object;
 
-    /**
-     * @return mixed
-     */
-    public function get();
+    public function get(): object;
 
-    /**
-     * @param $connection
-     * @return mixed
-     */
-    public function release($connection);
+    public function release(object $connection): void;
 
-    /**
-     * @return PoolConfigInterface
-     */
     public function getPoolConfig(): PoolConfigInterface;
 
-    public function getPool();
+    public function getPool(): Channel;
 
-    /**
-     * @return int
-     */
     public function getCurrentCount(): int;
 
-    /**
-     * @return int
-     */
     public function sub(): int;
 }

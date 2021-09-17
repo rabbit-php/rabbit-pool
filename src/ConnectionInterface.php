@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rabbit\Pool;
@@ -13,8 +14,5 @@ interface ConnectionInterface
 
     public function reconnect(): void;
 
-    /**
-     * @param bool $release
-     */
-    public function release($release = false): void;
+    public function release(bool $release = false): void;
 }
