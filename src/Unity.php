@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rabbit\Pool;
@@ -13,16 +14,8 @@ use Throwable;
  */
 class Unity
 {
-    /** @var BasePool */
-    protected BasePool $pool;
-
-    /**
-     * Client constructor.
-     * @param BasePool $pool
-     */
-    public function __construct(BasePool $pool)
+    public function __construct(protected BasePool $pool)
     {
-        $this->pool = $pool;
     }
 
     /**

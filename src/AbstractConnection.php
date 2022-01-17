@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rabbit\Pool;
@@ -14,14 +15,8 @@ abstract class AbstractConnection extends AbstractBase implements ConnectionInte
     /** @var int */
     protected int $retryDelay = 1;
 
-    /**
-     * AbstractConnection constructor.
-     *
-     * @param string $poolKey
-     */
-    public function __construct(string $poolKey)
+    public function __construct(protected string $poolKey)
     {
-        parent::__construct($poolKey);
         $this->createConnection();
     }
 

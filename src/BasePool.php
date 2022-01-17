@@ -16,7 +16,6 @@ use Rabbit\Base\Core\Channel;
 class BasePool extends BaseObject implements PoolInterface
 {
     protected int $currentCount = 0;
-    protected PoolConfigInterface $poolConfig;
     protected Channel $channel;
     protected string $objClass;
 
@@ -24,9 +23,8 @@ class BasePool extends BaseObject implements PoolInterface
      * BasePool constructor.
      * @param PoolConfigInterface $poolConfig
      */
-    public function __construct(PoolConfigInterface $poolConfig)
+    public function __construct(protected PoolConfigInterface $poolConfig)
     {
-        $this->poolConfig = $poolConfig;
         PoolManager::setPool($this);
     }
 

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rabbit\Pool;
@@ -12,27 +13,14 @@ use Rabbit\Base\Core\BaseObject;
  */
 abstract class AbstractBase extends BaseObject implements IBase
 {
-    /**
-     * @var string
-     */
-    protected string $poolKey;
-    /**
-     * @var bool
-     */
     protected bool $autoRelease = true;
 
-    /**
-     * AbstractCom constructor.
-     * @param string $poolKey
-     */
-    public function __construct(string $poolKey)
+    public function __construct(protected string $poolKey)
     {
-        $this->poolKey = $poolKey;
     }
 
     public function init(): void
     {
-
     }
 
     /**
