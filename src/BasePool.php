@@ -71,7 +71,7 @@ class BasePool extends BaseObject implements PoolInterface
     {
         $config = $this->getPoolConfig()->getConfig();
         return create([
-            'class' => $this->objClass,
+            '{}' => $this->objClass,
             'poolKey' => $this->getPoolConfig()->getName()
         ], $config, false);
     }

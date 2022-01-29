@@ -1,17 +1,13 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rabbit\Pool;
 
-/**
- * Class PoolProperties
- * @package Rabbit\Pool
- */
 class PoolProperties extends BasePoolProperties implements PoolConfigInterface, IConnectionProperties
 {
-    /** @var int */
     protected int $timeout = 3;
-    /** @var array */
+
     protected ?string $uri = null;
 
     /**
